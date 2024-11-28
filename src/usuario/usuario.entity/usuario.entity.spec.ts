@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { UsuarioEntity } from './usuario.entity';
 
 describe('UsuarioEntity', () => {

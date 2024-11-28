@@ -1,19 +1,19 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClaseService } from './clase.service';
+import { BonoController } from './bono.controller';
 
-describe('ClaseService', () => {
-  let service: ClaseService;
+describe('BonoController', () => {
+  let controller: BonoController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ClaseService],
+      controllers: [BonoController],
     }).compile();
 
-    service = module.get<ClaseService>(ClaseService);
+    controller = module.get<BonoController>(BonoController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 });

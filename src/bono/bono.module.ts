@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { BonoService } from './bono.service';
+import { BonoController } from './bono.controller';
 
 @Module({
-  providers: [BonoService]
+  providers: [BonoService],
+  controllers: [BonoController]
 })
 export class BonoModule {}
