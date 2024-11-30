@@ -14,13 +14,13 @@ export class UsuarioEntity {
  @Column()
  nombre: string;
  
- @Column({ type: 'enum', enum: ['TICSW', 'IMAGINE', 'COMIT'], nullable: true })
+ @Column()
  grupo: string; 
 
  @Column({type: 'int'})
  extension: number;
 
- @Column({ type: 'enum', enum: ['Profesor', 'Decana'] })
+ @Column()
  rol: string;
 
  @OneToOne(() => UsuarioEntity, { nullable: true })

@@ -14,16 +14,22 @@ export class BonoService {
     ) { }
     
     async crearBono(bono: BonoEntity): Promise<BonoEntity> {
+        const usuario = await this.bonoRepository.findOne({
+            where: { usuario: { id: bono.usuario.id } },
+            relations: ['usuario'],
+        });
+    
+        if (!usuario || usuario.usuario.rol !== 'Profesor') {
+            throw new BusinessLogicException('The user must have the role of professor', BusinessError.BAD_REQUEST);
+        }
+
         if (!bono.monto || bono.monto <= 0) {
             throw new BusinessLogicException('The amount must be a positive number', BusinessError.BAD_REQUEST);
         }
-
-        if (bono.usuario.rol !== 'profesor') {
-            throw new BusinessLogicException('The user must have the role of professor', BusinessError.FORBIDDEN);
-        }
-
+    
         return await this.bonoRepository.save(bono);
     }
+    
 
     async findBonoByCodigo(cod: string): Promise<BonoEntity> {
         const bono: BonoEntity = await this.bonoRepository.findOne({

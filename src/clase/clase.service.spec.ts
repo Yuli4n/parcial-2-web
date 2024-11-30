@@ -3,14 +3,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClaseService } from './clase.service';
 import { ClaseEntity } from './clase.entity/clase.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { BusinessError } from '../shared/errors/business-errors';
 
 describe('ClaseService', () => {
   let service: ClaseService;
-  //let repository: Repository<ClaseEntity>;
 
   const mockClaseRepository = {
     save: jest.fn(),
     findOne: jest.fn(),
+    find: jest.fn(),
+    delete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -25,14 +27,28 @@ describe('ClaseService', () => {
     }).compile();
 
     service = module.get<ClaseService>(ClaseService);
-    //repository = module.get<Repository<ClaseEntity>>(getRepositoryToken(ClaseEntity));
   });
 
-  it('debería crear una clase (caso positivo)', async () => {
+  it('debería lanzar excepción al crear una clase con código inválido (caso negativo)', async () => {
     const clase = {
       nombre: 'Matemáticas',
+      codigo: 'INVALID',
+    } as ClaseEntity;
+
+    await expect(service.crearClase(clase)).rejects.toHaveProperty(
+      'message',
+      'The codigo must be exactly 10 characters long',
+    );
+    await expect(service.crearClase(clase)).rejects.toHaveProperty(
+      'type',
+      BusinessError.PRECONDITION_FAILED,
+    );
+  });
+
+  it('debería crear una clase correctamente (caso positivo)', async () => {
+    const clase = {
+      nombre: 'Historia',
       codigo: '1234567890',
-      creditos: 3,
     } as ClaseEntity;
 
     mockClaseRepository.save.mockResolvedValue(clase);
@@ -42,13 +58,30 @@ describe('ClaseService', () => {
     expect(mockClaseRepository.save).toHaveBeenCalledWith(clase);
   });
 
-  it('debería lanzar excepción al crear una clase con código inválido (caso negativo)', async () => {
+  it('debería lanzar excepción al buscar una clase por ID inexistente (caso negativo)', async () => {
+    mockClaseRepository.findOne.mockResolvedValue(null);
+
+    await expect(service.findClaseById(1)).rejects.toHaveProperty(
+      'message',
+      'The clase with the given id was not found',
+    );
+    await expect(service.findClaseById(1)).rejects.toHaveProperty(
+      'type',
+      BusinessError.NOT_FOUND,
+    );
+  });
+
+  it('debería retornar una clase correctamente por ID (caso positivo)', async () => {
     const clase = {
-      nombre: 'Matemáticas',
-      codigo: 'INVALIDO', // Código no tiene 10 caracteres
-      creditos: 3,
+      id: 1,
+      nombre: 'Física',
+      codigo: '0987654321',
     } as ClaseEntity;
 
-    await expect(service.crearClase(clase)).rejects.toThrow("The codigo must be exactly 10 characters long");
+    mockClaseRepository.findOne.mockResolvedValue(clase);
+
+    const result = await service.findClaseById(1);
+    expect(result).toEqual(clase);
+    expect(mockClaseRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
   });
 });
