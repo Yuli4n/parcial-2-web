@@ -13,7 +13,7 @@ export class UsuarioService {
         private readonly usuarioRepository: Repository<UsuarioEntity>
     ) { }
 
-    async createUsuario(usuario: UsuarioEntity): Promise<UsuarioEntity> {
+    async crearUsuario(usuario: UsuarioEntity): Promise<UsuarioEntity> {
         if (usuario.rol === 'Profesor') {
             const validGroups = ['TICSW', 'IMAGINE', 'COMIT'];
             if (!validGroups.includes(usuario.grupo)) {

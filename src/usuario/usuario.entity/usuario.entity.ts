@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { BonoEntity } from 'src/bono/bono.entity/bono.entity';
-import { ClaseEntity } from 'src/clase/clase.entity/clase.entity';
+import { BonoEntity } from '../../bono/bono.entity/bono.entity';
+import { ClaseEntity } from '../../clase/clase.entity/clase.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -14,8 +14,8 @@ export class UsuarioEntity {
  @Column()
  nombre: string;
  
- @Column()
- grupo: string;
+ @Column({ type: 'enum', enum: ['TICSW', 'IMAGINE', 'COMIT'], nullable: true })
+ grupo: string; 
 
  @Column({type: 'int'})
  extension: number;

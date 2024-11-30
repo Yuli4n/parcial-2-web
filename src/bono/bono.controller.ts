@@ -20,12 +20,12 @@ export class BonoController {
         return await this.bonoService.crearBono(bono);
     }
 
-    @Get(':bonoId')
+    @Get('clase/:cod')
     async findBonoByCodigo(@Param('cod') cod: string) {
         return await this.bonoService.findBonoByCodigo(cod);
     }
 
-    @Get()
+    @Get('usuario/:userId')
     async findAllBonosByUsuario(@Param('userId') userId: number) {
         return await this.bonoService.findAllBonosByUsuario(userId);
     }
@@ -35,6 +35,7 @@ export class BonoController {
     async delete(@Param('bonoId') bonoId: number) {
         return await this.bonoService.deleteBono(bonoId);
     }
+
 
 
 }
