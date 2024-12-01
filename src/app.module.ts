@@ -1,33 +1,33 @@
 /* eslint-disable prettier/prettier */
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ClaseModule } from './clase/clase.module';
 import { BonoModule } from './bono/bono.module';
+import { UsuarioEntity } from './usuario/usuario.entity/usuario.entity';
+import { ClaseEntity } from './clase/clase.entity/clase.entity';
+import { BonoEntity } from './bono/bono.entity/bono.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT, 10) || 5432,
-      username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'password',
-      database: process.env.DB_NAME || 'app_database',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
-
     UsuarioModule,
     ClaseModule,
     BonoModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'parcial2db',
+      entities: [UsuarioEntity, ClaseEntity, BonoEntity],
+      dropSchema: true,
+      synchronize: true,
+      keepConnectionAlive: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

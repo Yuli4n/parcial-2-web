@@ -12,7 +12,7 @@ export class UsuarioController {
     constructor(private readonly usuarioService: UsuarioService) {}
 
     @Post()
-    async createUsuario(@Body() usuarioDto: UsuarioDto): Promise<UsuarioEntity> {
+    async crearUsuario(@Body() usuarioDto: UsuarioDto): Promise<UsuarioEntity> {
         const usuario: UsuarioEntity = plainToInstance(UsuarioEntity, usuarioDto);
         return await this.usuarioService.crearUsuario(usuario);
     }

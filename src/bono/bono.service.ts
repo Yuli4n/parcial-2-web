@@ -5,41 +5,55 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BonoEntity } from './bono.entity/bono.entity';
 import { BusinessError, BusinessLogicException } from '../shared/errors/business-errors';
+import { UsuarioEntity } from '../usuario/usuario.entity/usuario.entity';
 
 @Injectable()
 export class BonoService {
     constructor(
         @InjectRepository(BonoEntity)
-        private readonly bonoRepository: Repository<BonoEntity>
+        private readonly bonoRepository: Repository<BonoEntity>,
+        
+        @InjectRepository(UsuarioEntity) // Inyección del repositorio de UsuarioEntity
+        private readonly usuarioRepository: Repository<UsuarioEntity>
     ) { }
     
     async crearBono(bono: BonoEntity): Promise<BonoEntity> {
-        const usuario = await this.bonoRepository.findOne({
-            where: { usuario: { id: bono.usuario.id } },
-            relations: ['usuario'],
+        const usuario = await this.usuarioRepository.findOne({
+            where: { id: bono.usuario.id },
         });
     
-        if (!usuario || usuario.usuario.rol !== 'Profesor') {
-            throw new BusinessLogicException('The user must have the role of professor', BusinessError.BAD_REQUEST);
+        if (!usuario || usuario.rol !== 'Profesor') {
+            throw new BusinessLogicException(
+                'The user must have the role of professor',
+                BusinessError.BAD_REQUEST,
+            );
         }
-
+    
         if (!bono.monto || bono.monto <= 0) {
-            throw new BusinessLogicException('The amount must be a positive number', BusinessError.BAD_REQUEST);
+            throw new BusinessLogicException(
+                'The amount must be a positive number',
+                BusinessError.BAD_REQUEST,
+            );
         }
     
         return await this.bonoRepository.save(bono);
     }
     
+    
 
     async findBonoByCodigo(cod: string): Promise<BonoEntity> {
-        const bono: BonoEntity = await this.bonoRepository.findOne({
-            where: { clase: { codigo: cod } },
-            relations: ['clase'],
+        const bono = await this.bonoRepository.findOne({
+            where: { palabra: cod },
+            relations: ['usuario', 'clase'],
         });
+    
         if (!bono) {
-            throw new BusinessLogicException('The bono with the given class code was not found', BusinessError.NOT_FOUND);
+            throw new BusinessLogicException(
+                'The bono with the given class code was not found',
+                BusinessError.NOT_FOUND,
+            );
         }
-
+    
         return bono;
     }
 

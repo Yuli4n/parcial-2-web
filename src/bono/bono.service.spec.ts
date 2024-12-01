@@ -120,7 +120,7 @@ describe('BonoService', () => {
         clase: clase,
     } as BonoEntity;
 
-    jest.spyOn(repository, 'findOne').mockResolvedValue(null);
+    jest.spyOn(usuarioRepository, 'findOne').mockResolvedValue(null);
 
     await expect(service.crearBono(bono)).rejects.toHaveProperty('message', 'The user must have the role of professor');
 });

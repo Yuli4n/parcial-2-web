@@ -1,0 +1,533 @@
+{
+	"info": {
+		"_postman_id": "dc1ba35e-be55-4477-bafa-8b31e25dcf2d",
+		"name": "Parcial2 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "29787451"
+	},
+	"item": [
+		{
+			"name": "CrearUsuario",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": 12345,\r\n  \"nombre\": \"Juan Perez\",\r\n  \"grupo\": \"TICSW\",\r\n  \"extension\": 12345678,\r\n  \"rol\": \"Profesor\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/v1/usuarios",
+				"description": "# Create New User\n\nThis endpoint allows you to create a new user by providing the user details in the request body.\n\n## Request Body\n\n- cedula (number): The user's identification number.\n    \n- nombre (string): The user's name.\n    \n- grupo (string): The user's group.\n    \n- extension (number): The user's extension number.\n    \n- rol (string): The user's role.\n    \n\nExample:\n\n``` json\n{\n  \"cedula\": 12345,\n  \"nombre\": \"Juan Perez\",\n  \"grupo\": \"TICSW\",\n  \"extension\": 12345678,\n  \"rol\": \"Profesor\"\n}\n\n ```\n\n## Response\n\nUpon successful creation of the user, the endpoint returns the following details:\n\n- cedula (number): The user's identification number.\n    \n- nombre (string): The user's name.\n    \n- grupo (string): The user's group.\n    \n- extension (number): The user's extension number.\n    \n- rol (string): The user's role.\n    \n- id (number): The unique identifier for the user.\n    \n\nExample Response:\n\n``` json\n{\n  \"cedula\": 0,\n  \"nombre\": \"\",\n  \"grupo\": \"\",\n  \"extension\": 0,\n  \"rol\": \"\",\n  \"id\": 0\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "GetUsuario",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Hacer un POST al endpoint de creación de usuario\r",
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get('base_url') + '/api/v1/usuarios',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            cedula: Math.floor(Math.random() * 1000000),\r",
+							"            nombre: 'Usuario para obtener',\r",
+							"            grupo: 'TICSW',\r",
+							"            extension: 12345678,\r",
+							"            rol: 'Profesor'\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    if (!err) {\r",
+							"        const jsonData = response.json();\r",
+							"        // Guardar el ID del usuario recién creado en una variable de entorno\r",
+							"        pm.environment.set('usuario_id', jsonData.id);\r",
+							"    } else {\r",
+							"        console.error(err);\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/v1/usuarios/{{usuario_id}}",
+				"description": "### Get User Details\n\nThis endpoint retrieves the details of a specific user by their ID.\n\n#### Request\n\n- Method: GET\n    \n- URL: `{{base_url}}/api/v1/usuarios/{{usuario_id}}`\n    \n\n#### Response\n\n- Status: 200 OK\n    \n- Content-Type: application/json\n    \n- { \"id\": 0, \"cedula\": 0, \"nombre\": \"\", \"grupo\": \"\", \"extension\": 0, \"rol\": \"\"}  \n    The response body contains the user's ID, cedula, name, group, extension, and role."
+			},
+			"response": []
+		},
+		{
+			"name": "EliminarUsuario",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Hacer un POST al endpoint de creación de usuario\r",
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get('base_url') + '/api/v1/usuarios',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            cedula: Math.floor(Math.random() * 1000000),\r",
+							"            nombre: 'Usuario para eliminar',\r",
+							"            grupo: 'TICSW',\r",
+							"            extension: 12345678,\r",
+							"            rol: 'Profesor'\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    if (!err) {\r",
+							"        const jsonData = response.json();\r",
+							"        // Guardar el ID del usuario recién creado en una variable de entorno\r",
+							"        pm.environment.set('usuario_id', jsonData.id);\r",
+							"    } else {\r",
+							"        console.error(err);\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/v1/usuarios/{{usuario_id}}",
+				"description": "### Delete User\n\nThis endpoint is used to delete a specific user by their ID.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n- Status: 200\n    \n- Content-Type: text/xml\n    \n- Body: The response body is empty (null)."
+			},
+			"response": []
+		},
+		{
+			"name": "CrearBono",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"  url: pm.environment.get('base_url') + '/api/v1/usuarios',\r",
+							"  method: 'POST',\r",
+							"  header: {\r",
+							"    'Content-Type': 'application/json'\r",
+							"  },\r",
+							"  body: {\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify({\r",
+							"      cedula: 12345,\r",
+							"      nombre: 'Juan Perez',\r",
+							"      grupo: 'TICSW',\r",
+							"      extension: 12345678,\r",
+							"      rol: 'Profesor'\r",
+							"    })\r",
+							"  }\r",
+							"}, function (err, response) {\r",
+							"  if (!err) {\r",
+							"    const jsonData = response.json();\r",
+							"    pm.environment.set('usuario_id', jsonData.id);\r",
+							"  }\r",
+							"});\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"  url: pm.environment.get('base_url') + '/api/v1/clases',\r",
+							"  method: 'POST',\r",
+							"  header: {\r",
+							"    'Content-Type': 'application/json'\r",
+							"  },\r",
+							"  body: {\r",
+							"    mode: 'raw',\r",
+							"    raw: JSON.stringify({\r",
+							"      codigo: 'CLASE00101',\r",
+							"      nombre: 'Clase Prueba',\r",
+							"      creditos: 3,\r",
+							"      usuario: {\r",
+							"        id: pm.environment.get('usuario_id')\r",
+							"      }\r",
+							"    })\r",
+							"  }\r",
+							"}, function (err, response) {\r",
+							"  if (!err) {\r",
+							"    const jsonData = response.json();\r",
+							"    pm.environment.set('clase_id', jsonData.id);\r",
+							"  }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"monto\": 1000,\r\n  \"calificacion\": 3.5,\r\n  \"palabra\": \"Bono1\",\r\n  \"usuario\": {\r\n    \"id\":{{usuario_id}}\r\n  },\r\n  \"clase\": {\r\n    \"id\": {{clase_id}}\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/v1/bonos",
+				"description": "### POST /api/v1/bonos\n\nThis endpoint allows the creation of a new \"bono\" with the provided details.\n\n#### Request Body\n\n- `monto` (number): The amount associated with the \"bono\".\n    \n- `calificacion` (number): The rating or score for the \"bono\".\n    \n- `palabra` (string): The name or description of the \"bono\".\n    \n- `usuario` (object): The user associated with the \"bono\" containing the `id` as a reference.\n    \n- `clase` (object): The class associated with the \"bono\" containing the `id` as a reference.\n    \n\nExample:\n\n``` json\n{\n  \"monto\": 1000,\n  \"calificacion\": 3.5,\n  \"palabra\": \"Bono1\",\n  \"usuario\": {\n    \"id\": {{usuario_id}}\n  },\n  \"clase\": {\n    \"id\": {{clase_id}}\n  }\n}\n\n ```\n\n#### Response (201 - Created)\n\nThe response body is in JSON format and represents the newly created \"bono\" with the following schema:\n\n``` json\n{\n  \"monto\": 0,\n  \"calificacion\": 0,\n  \"palabra\": \"\",\n  \"usuario\": {\n    \"id\": 0\n  },\n  \"clase\": {\n    \"id\": 0\n  },\n  \"id\": 0\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "GetBonoCodigo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get('base_url') + '/api/v1/bonos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            monto: 1500, // Ajusta según tus necesidades\r",
+							"            calificacion: 4.5, // Ajusta según tus necesidades\r",
+							"            palabra: 'BonoAutomatizado_' + Date.now(), // Genera un código único\r",
+							"            usuario: {\r",
+							"                id: pm.environment.get('usuario_id'), // Asegúrate de que usuario_id ya esté definido\r",
+							"            },\r",
+							"            clase: {\r",
+							"                id: pm.environment.get('clase_id'), // Asegúrate de que clase_id ya esté definido\r",
+							"            }\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    if (!err && response.code === 201) {\r",
+							"        const jsonData = response.json();\r",
+							"        pm.environment.set('bono_codigo', jsonData.palabra); // Guarda el código del bono en el entorno\r",
+							"    } else {\r",
+							"        console.error('Error al crear el bono:', err || response.json());\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{base_url}}/api/v1/bonos/clase/{{bono_codigo}}",
+				"description": "### Get Bono Clase Details\n\nThis endpoint retrieves details of a specific \"bono clase\" identified by the provided \"bono_codigo\".\n\n#### Response\n\nThe response is a JSON object with the following schema:\n\n``` json\n{\n  \"id\": 0,\n  \"monto\": 0,\n  \"calificacion\": 0,\n  \"palabra\": \"\",\n  \"usuario\": {\n    \"id\": 0,\n    \"cedula\": 0,\n    \"nombre\": \"\",\n    \"grupo\": \"\",\n    \"extension\": 0,\n    \"rol\": \"\"\n  },\n  \"clase\": {\n    \"id\": 0,\n    \"nombre\": \"\",\n    \"codigo\": \"\",\n    \"creditos\": 0\n  }\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "GetBonosUsuario",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Paso 1: Crear Usuario\r",
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get('base_url') + '/api/v1/usuarios',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json',\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            cedula: 12345,\r",
+							"            nombre: 'Juan Perez',\r",
+							"            grupo: 'TICSW',\r",
+							"            extension: 12345678,\r",
+							"            rol: 'Profesor',\r",
+							"        }),\r",
+							"    },\r",
+							"}, function (err, response) {\r",
+							"    if (!err && response.code === 201) {\r",
+							"        const usuarioData = response.json();\r",
+							"        pm.environment.set('usuario_id', usuarioData.id); // Guarda el ID del usuario para bonos\r",
+							"\r",
+							"        // Paso 2: Crear Clase\r",
+							"        pm.sendRequest({\r",
+							"            url: pm.environment.get('base_url') + '/api/v1/clases',\r",
+							"            method: 'POST',\r",
+							"            header: {\r",
+							"                'Content-Type': 'application/json',\r",
+							"            },\r",
+							"            body: {\r",
+							"                mode: 'raw',\r",
+							"                raw: JSON.stringify({\r",
+							"                    codigo: 'CLASE00101',\r",
+							"                    nombre: 'Clase Prueba',\r",
+							"                    creditos: 3,\r",
+							"                    usuario: {\r",
+							"                        id: usuarioData.id, // Asocia la clase al usuario\r",
+							"                    },\r",
+							"                }),\r",
+							"            },\r",
+							"        }, function (err, response) {\r",
+							"            if (!err && response.code === 201) {\r",
+							"                const claseData = response.json();\r",
+							"                pm.environment.set('clase_id', claseData.id); // Guarda el ID de la clase\r",
+							"\r",
+							"                // Paso 3: Crear Primer Bono\r",
+							"                pm.sendRequest({\r",
+							"                    url: pm.environment.get('base_url') + '/api/v1/bonos',\r",
+							"                    method: 'POST',\r",
+							"                    header: {\r",
+							"                        'Content-Type': 'application/json',\r",
+							"                    },\r",
+							"                    body: {\r",
+							"                        mode: 'raw',\r",
+							"                        raw: JSON.stringify({\r",
+							"                            monto: 1000,\r",
+							"                            calificacion: 3.5,\r",
+							"                            palabra: 'Bono1',\r",
+							"                            usuario: {\r",
+							"                                id: usuarioData.id,\r",
+							"                            },\r",
+							"                            clase: {\r",
+							"                                id: claseData.id,\r",
+							"                            },\r",
+							"                        }),\r",
+							"                    },\r",
+							"                }, function (err, response) {\r",
+							"                    if (!err && response.code === 201) {\r",
+							"                        const bono1Data = response.json();\r",
+							"                        pm.environment.set('bono1_id', bono1Data.id); // Guarda el ID del primer bono\r",
+							"\r",
+							"                        // Paso 4: Crear Segundo Bono\r",
+							"                        pm.sendRequest({\r",
+							"                            url: pm.environment.get('base_url') + '/api/v1/bonos',\r",
+							"                            method: 'POST',\r",
+							"                            header: {\r",
+							"                                'Content-Type': 'application/json',\r",
+							"                            },\r",
+							"                            body: {\r",
+							"                                mode: 'raw',\r",
+							"                                raw: JSON.stringify({\r",
+							"                                    monto: 1500,\r",
+							"                                    calificacion: 4.0,\r",
+							"                                    palabra: 'Bono2',\r",
+							"                                    usuario: {\r",
+							"                                        id: usuarioData.id,\r",
+							"                                    },\r",
+							"                                    clase: {\r",
+							"                                        id: claseData.id,\r",
+							"                                    },\r",
+							"                                }),\r",
+							"                            },\r",
+							"                        }, function (err, response) {\r",
+							"                            if (!err && response.code === 201) {\r",
+							"                                const bono2Data = response.json();\r",
+							"                                pm.environment.set('bono2_id', bono2Data.id); // Guarda el ID del segundo bono\r",
+							"                            } else {\r",
+							"                                console.error('Error al crear el segundo bono:', err || response.json());\r",
+							"                            }\r",
+							"                        });\r",
+							"                    } else {\r",
+							"                        console.error('Error al crear el primer bono:', err || response.json());\r",
+							"                    }\r",
+							"                });\r",
+							"            } else {\r",
+							"                console.error('Error al crear la clase:', err || response.json());\r",
+							"            }\r",
+							"        });\r",
+							"    } else {\r",
+							"        console.error('Error al crear el usuario:', err || response.json());\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{base_url}}/api/v1/bonos/usuario/{{usuario_id}}",
+				"description": "The endpoint retrieves information about bonuses for a specific user identified by the `usuario_id`.\n\n### Response\n\nThe response is a JSON array with the following schema:\n\n- `id` (number): The ID of the bonus.\n    \n- `monto` (number): The amount of the bonus.\n    \n- `calificacion` (number): The rating of the bonus.\n    \n- `palabra` (string): The description of the bonus.\n    \n- `usuario` (object): Information about the user receiving the bonus.\n    \n    - `id` (number): The ID of the user.\n        \n    - `cedula` (number): The user's identification number.\n        \n    - `nombre` (string): The user's name.\n        \n    - `grupo` (string): The user's group.\n        \n    - `extension` (number): The user's extension number.\n        \n    - `rol` (string): The user's role."
+			},
+			"response": []
+		},
+		{
+			"name": "EliminarBono",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get('base_url') + '/api/v1/bonos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            monto: 1000,\r",
+							"            calificacion: 3.5,\r",
+							"            palabra: \"BonoEliminar\",\r",
+							"            usuario: {\r",
+							"                id: pm.environment.get('usuario_id')\r",
+							"            },\r",
+							"            clase: {\r",
+							"                id: pm.environment.get('clase_id')\r",
+							"            }\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    if (!err && response.code === 201) {\r",
+							"        const bonoData = response.json();\r",
+							"        pm.environment.set('bono_id', bonoData.id); // Guarda el ID del bono en el entorno\r",
+							"    } else {\r",
+							"        console.error('Error al crear el bono:', err || response.json());\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{base_url}}/api/v1/bonos/{{bono_id}}",
+				"description": "This endpoint is used to delete a specific \"bono\" by its ID. The request should be sent as an HTTP DELETE to the specified URL with the \"bono_id\" path parameter.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response\n\n- Status: 204\n    \n- Content-Type: text/xml\n    \n\nThe response does not include a body, as indicated by \"null\". Upon successful deletion, the server returns a status code of 204 with no content in the response body."
+			},
+			"response": []
+		},
+		{
+			"name": "CrearClase",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get('base_url') + '/api/v1/usuarios',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            cedula: 123456,\r",
+							"            nombre: \"Usuario para Clase\",\r",
+							"            grupo: \"TICSW\", // Grupo válido para el rol Profesor\r",
+							"            extension: 12345678,\r",
+							"            rol: \"Profesor\" // Requerido para las clases\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    if (!err && response.code === 201) {\r",
+							"        const usuarioData = response.json();\r",
+							"        pm.environment.set('usuario_id', usuarioData.id); // Guarda el ID del usuario en el entorno\r",
+							"    } else {\r",
+							"        console.error('Error al crear el usuario:', err || response.json());\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"codigo\": \"CLASE00123\",\r\n    \"nombre\": \"Clase Nueva\",\r\n    \"creditos\": 3,\r\n    \"usuario\": {\r\n        \"id\": {{usuario_id}}\r\n    }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/v1/clases",
+				"description": "### Add New Class\n\nThis endpoint allows you to add a new class to the system.\n\n#### Request Body\n\n- `codigo` (string): The code of the class.\n    \n- `nombre` (string): The name of the class.\n    \n- `creditos` (number): The number of credits for the class.\n    \n- `usuario` (object): The user associated with the class, containing the `id` of the user.\n    \n\n#### Response\n\nUpon successful creation, the server responds with a status code of 201 and a JSON object containing the details of the newly created class, including the `codigo`, `nombre`, `creditos`, `usuario`, and `id`.\n\nExample:\n\n``` json\n{\n    \"codigo\": \"CLASE00123\",\n    \"nombre\": \"Clase Nueva\",\n    \"creditos\": 3,\n    \"usuario\": {\n        \"id\": 123\n    },\n    \"id\": 456\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "GetClase",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"description": "### Get Class Details\n\nThis endpoint retrieves the details of a specific class identified by the `clase_id`.\n\n#### Request\n\n- Method: GET\n    \n- URL: `{{base_url}}/api/v1/clases/{{clase_id}}`\n    \n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\n``` json\n{\n  \"id\": 0,\n  \"nombre\": \"\",\n  \"codigo\": \"\",\n  \"creditos\": 0\n}\n\n ```"
+			},
+			"response": []
+		}
+	]
+}
